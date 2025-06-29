@@ -64,11 +64,13 @@ document.addEventListener('DOMContentLoaded', () => {
       }
 
       try {
-        const res = await fetch('http://localhost:3000/comments', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ name, message })
-        });
+        const res = await fetch('https://ohm-backend.onrender.com/comments', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ name, message })
+      });
+
+
 
         const data = await res.json();
         if (res.ok) {
@@ -88,7 +90,7 @@ document.addEventListener('DOMContentLoaded', () => {
   // ========= Load Comments ===========
   async function loadComments() {
     try {
-      const res = await fetch('http://localhost:3000/comments');
+      const res = await fetch('https://ohm-backend.onrender.com/comments');
       const comments = await res.json();
 
       const commentList = document.getElementById('commentList');
@@ -123,7 +125,7 @@ document.addEventListener('DOMContentLoaded', () => {
   // ========= React to Comment ===========
   window.react = async function (commentId, type) {
     try {
-      const res = await fetch(`http://localhost:3000/comments/${commentId}/reactions`, {
+      const res = await fetch(`https://ohm-backend.onrender.com/comments`, {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ reaction: type })
@@ -146,7 +148,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (!confirmDelete) return;
 
     try {
-      const res = await fetch(`http://localhost:3000/comments/${id}`, {
+      const res = await fetch(`https://ohm-backend.onrender.com/comments`, {
         method: 'DELETE'
       });
 
@@ -217,7 +219,7 @@ document.addEventListener('DOMContentLoaded', () => {
       }
 
       try {
-        const response = await fetch('http://localhost:3000/api/contact', {
+        const response = await fetch('https://ohm-backend.onrender.com/comments', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
