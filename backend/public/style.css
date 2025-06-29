@@ -247,7 +247,7 @@ body.dark-mode .toggle-thumb-glass {
 .home {
 background:
   linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4)),
-    url('/images/kailash-background.jpg') no-repeat center center;
+    url('/backend/public/images/kailash-background.jpg') no-repeat center center;
 
   background-size: cover;
   background-attachment: fixed;
