@@ -148,7 +148,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (!confirmDelete) return;
 
     try {
-      const res = await fetch(`https://ohm-backend.onrender.com/comments/${id}`, {
+      const res = await fetch('https://ohm-backend.onrender.com/api/comments', {
         method: 'DELETE'
       });
 

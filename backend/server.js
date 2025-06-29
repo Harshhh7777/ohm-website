@@ -6,7 +6,6 @@ require('dotenv').config({ path: dotenvPath });
 console.log('Email:', process.env.EMAIL_USER);
 console.log('Password set:', !!process.env.EMAIL_PASS);
 console.log('Recipient:', process.env.RECIPIENT_EMAIL);
-
 console.log("🟢 Starting the server...");
 
 const express = require('express');
@@ -54,7 +53,7 @@ const commentSchema = new mongoose.Schema({
 const Comment = mongoose.model('Comment', commentSchema);
 
 // 📥 Save comment
-app.post('/comments', async (req, res) => {
+app.post('/api/comments', async (req, res) => {
   const { name, message } = req.body;
   if (!name || !message) {
     return res.status(400).json({ message: 'Name and message are required' });
@@ -71,7 +70,7 @@ app.post('/comments', async (req, res) => {
 });
 
 // 📤 Get comments
-app.get('/comments', async (req, res) => {
+app.get('/api/comments', async (req, res) => {
   try {
     const comments = await Comment.find().sort({ timestamp: -1 });
     res.json(comments);
@@ -82,7 +81,7 @@ app.get('/comments', async (req, res) => {
 });
 
 // 🗑️ Delete comment
-app.delete('/comments/:id', async (req, res) => {
+app.delete('/api/comments/:id', async (req, res) => {
   try {
     await Comment.findByIdAndDelete(req.params.id);
     res.json({ message: '✅ Comment deleted!' });
@@ -93,7 +92,7 @@ app.delete('/comments/:id', async (req, res) => {
 });
 
 // 🔁 React to comment
-app.patch('/comments/:id/reactions', async (req, res) => {
+app.patch('/api/comments/:id/reactions', async (req, res) => {
   const { reaction } = req.body;
   if (!['like', 'love', 'laugh'].includes(reaction)) {
     return res.status(400).json({ message: 'Invalid reaction type' });
@@ -144,17 +143,13 @@ app.post('/api/contact', async (req, res) => {
   }
 });
 
-
-// 🚀 Start server on dynamic port (Render)
-const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => {
-  console.log(`🚀 Server running on port ${PORT}`);
-});
-
-
-// 🌍 Fallback route to serve frontend index.html
+// 🌍 Fallback route to serve frontend (must be last!)
 app.get('*', (req, res) => {
   res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
 
-
+// 🚀 Start server
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, () => {
+  console.log(`🚀 Server running on port ${PORT}`);
+});
