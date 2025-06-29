@@ -144,13 +144,17 @@ app.post('/api/contact', async (req, res) => {
   }
 });
 
-// 🌍 Fallback route to serve frontend index.html
-app.get('*', (req, res) => {
-  res.sendFile(path.join(__dirname, 'public', 'index.html'));
-});
 
 // 🚀 Start server on dynamic port (Render)
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
   console.log(`🚀 Server running on port ${PORT}`);
 });
+
+
+// 🌍 Fallback route to serve frontend index.html
+app.get('*', (req, res) => {
+  res.sendFile(path.join(__dirname, 'public', 'index.html'));
+});
+
+
