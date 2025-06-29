@@ -1,4 +1,4 @@
-// 🟢 Load environment variables FIRST using absolute path
+// 🟢 Load environment variables
 const path = require('path');
 const dotenvPath = path.resolve(__dirname, '.env');
 require('dotenv').config({ path: dotenvPath });
@@ -21,7 +21,17 @@ app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// ✅ Email Transporter (ONLY once)
+// ✅ Serve static frontend files
+app.use(express.static(path.join(__dirname, 'public')));
+
+// ✅ MongoDB Connection
+const mongoURI = process.env.MONGODB_URI || "your-fallback-mongodb-uri-here";
+
+mongoose.connect(mongoURI)
+  .then(() => console.log("✅ Connected to MongoDB"))
+  .catch(err => console.error("❌ MongoDB connection error:", err));
+
+// ✅ Email setup
 let transporter = nodemailer.createTransport({
   service: 'gmail',
   auth: {
@@ -29,16 +39,6 @@ let transporter = nodemailer.createTransport({
     pass: process.env.EMAIL_PASS
   }
 });
-
-// ✅ MongoDB Connection
-const mongoURI = process.env.MONGODB_URI || "mongodb+srv://Harsh:harshith.007@harsh0portfolio.fiqfheo.mongodb.net/portfolioComments?retryWrites=true&w=majority&appName=Harsh0portfolio";
-
-mongoose.connect(mongoURI, {
-  useNewUrlParser: true,
-  useUnifiedTopology: true
-})
-.then(() => console.log("✅ Connected to MongoDB"))
-.catch(err => console.error("❌ MongoDB connection error:", err));
 
 // ✅ Mongoose Schema
 const commentSchema = new mongoose.Schema({
@@ -53,7 +53,7 @@ const commentSchema = new mongoose.Schema({
 });
 const Comment = mongoose.model('Comment', commentSchema);
 
-// 📥 POST: Save comment
+// 📥 Save comment
 app.post('/comments', async (req, res) => {
   const { name, message } = req.body;
   if (!name || !message) {
@@ -70,7 +70,7 @@ app.post('/comments', async (req, res) => {
   }
 });
 
-// 📤 GET: Load comments
+// 📤 Get comments
 app.get('/comments', async (req, res) => {
   try {
     const comments = await Comment.find().sort({ timestamp: -1 });
@@ -81,7 +81,7 @@ app.get('/comments', async (req, res) => {
   }
 });
 
-// 🗑️ DELETE: Remove comment
+// 🗑️ Delete comment
 app.delete('/comments/:id', async (req, res) => {
   try {
     await Comment.findByIdAndDelete(req.params.id);
@@ -92,7 +92,7 @@ app.delete('/comments/:id', async (req, res) => {
   }
 });
 
-// 🔁 PATCH: Update reaction
+// 🔁 React to comment
 app.patch('/comments/:id/reactions', async (req, res) => {
   const { reaction } = req.body;
   if (!['like', 'love', 'laugh'].includes(reaction)) {
@@ -113,7 +113,7 @@ app.patch('/comments/:id/reactions', async (req, res) => {
   }
 });
 
-// 📧 Contact Form Handler
+// 📧 Contact Form
 app.post('/api/contact', async (req, res) => {
   const { name, email, phone, message, consent } = req.body;
 
@@ -144,13 +144,13 @@ app.post('/api/contact', async (req, res) => {
   }
 });
 
-// ✅ Root test
-app.get('/', (req, res) => {
-  res.send('🌐 Hello from the backend!');
+// 🌍 Fallback route to serve frontend index.html
+app.get('*', (req, res) => {
+  res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
 
-// 🚀 Start server
+// 🚀 Start server on dynamic port (Render)
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
-  console.log(`🚀 Server running at http://localhost:${PORT}`);
+  console.log(`🚀 Server running on port ${PORT}`);
 });
