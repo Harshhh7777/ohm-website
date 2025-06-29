@@ -558,6 +558,16 @@ h3 {
   box-shadow: 0 12px 30px rgba(0, 255, 255, 0.3);
 }
 
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(40px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
 
 /* ===== Skill Section ===== */
 

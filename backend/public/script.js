@@ -1,10 +1,10 @@
-// Sticky header on scroll
+// ========== Sticky header on scroll ==========
 window.addEventListener("scroll", function () {
   const header = document.querySelector(".header");
   header.classList.toggle("scrolled", window.scrollY > 50);
 });
 
-// Toggle navbar for mobile
+// ========== Toggle navbar for mobile ==========
 document.querySelector('.menu-toggle').addEventListener('click', () => {
   const navbar = document.querySelector('.navbar');
   const menuToggle = document.querySelector('.menu-toggle');
@@ -12,7 +12,7 @@ document.querySelector('.menu-toggle').addEventListener('click', () => {
   menuToggle.classList.toggle('active');
 });
 
-// Typing effect
+// ========== Typing effect ==========
 const roleElement = document.querySelector(".role");
 const text = "Web Developer & Designer.";
 let index = 0;
@@ -21,31 +21,39 @@ function typeText() {
     roleElement.textContent = text.substring(0, index);
     index++;
     setTimeout(typeText, 100);
+  } else {
+    setTimeout(() => {
+      index = 0;
+      typeText();
+    }, 2000); // loop again after delay
   }
 }
 typeText();
 
-// Scroll animations
+// ========== Scroll animations ==========
 const observer = new IntersectionObserver(entries => {
   entries.forEach(entry => {
     if (entry.isIntersecting) {
       entry.target.style.animationPlayState = 'running';
     } else {
       entry.target.style.animation = 'none';
-      void entry.target.offsetWidth;
+      void entry.target.offsetWidth; // trigger reflow
       entry.target.style.animation = entry.target.dataset.animation;
       entry.target.style.animationPlayState = 'paused';
     }
   });
 }, { threshold: 0.25 });
 
-document.querySelectorAll('.about-heading, .about-text p, .about-image img, .portfolio-heading').forEach(el => {
+document.querySelectorAll(
+  '.about-heading, .about-text p, .about-image img, .portfolio-heading, .portfolio-card'
+).forEach(el => {
   el.dataset.animation = 'fadeInUp 1.5s ease-out forwards';
   el.style.animation = el.dataset.animation;
   el.style.animationPlayState = 'paused';
   observer.observe(el);
 });
 
+// ========== DOMContentLoaded ==========
 document.addEventListener('DOMContentLoaded', () => {
   const API_URL = 'https://ohm-backend.onrender.com';
 
@@ -117,6 +125,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   }
 
+  // ========= React to Comment ==========
   window.react = async function (commentId, type) {
     try {
       const res = await fetch(`${API_URL}/comments/${commentId}/reactions`, {
@@ -136,6 +145,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   };
 
+  // ========= Delete Comment ==========
   window.deleteComment = async function (id) {
     const confirmDelete = confirm("Are you sure you want to delete this comment?");
     if (!confirmDelete) return;
@@ -157,6 +167,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   };
 
+  // Initial comment load
   loadComments();
 
   // ========= Contact Form ==========
@@ -194,9 +205,16 @@ document.addEventListener('DOMContentLoaded', () => {
       }
     });
   }
+
+  // ========= Apply saved theme on load ==========
+  if (localStorage.getItem('theme') === 'dark') {
+    document.body.classList.add('dark-mode');
+  } else {
+    document.body.classList.remove('dark-mode');
+  }
 });
 
-// Fix auto-scroll to contact on page load
+// ========== Fix auto-scroll to contact on page load ==========
 window.addEventListener("load", () => {
   if (location.hash && document.querySelector(location.hash)) {
     history.replaceState(null, null, " ");
@@ -204,16 +222,8 @@ window.addEventListener("load", () => {
   }
 });
 
-// Dark/light mode toggle
+// ========== Dark/light mode toggle ==========
 function toggleDarkMode() {
   const isDark = document.body.classList.toggle('dark-mode');
   localStorage.setItem('theme', isDark ? 'dark' : 'light');
 }
-
-window.addEventListener('DOMContentLoaded', () => {
-  if (localStorage.getItem('theme') === 'dark') {
-    document.body.classList.add('dark-mode');
-  } else {
-    document.body.classList.remove('dark-mode');
-  }
-});
