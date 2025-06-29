@@ -1,0 +1,23 @@
+{
+  "name": "backend",
+  "version": "1.0.0",
+  "main": "server.js",
+  "scripts": {
+    "backend": "nodemon server.js",
+    "frontend": "live-server ../frontend --port=5501",
+    "dev": "concurrently \"npm run backend\" \"npm run frontend\""
+  },
+  "dependencies": {
+    "body-parser": "^2.2.0",
+    "cors": "^2.8.5",
+    "dotenv": "^16.5.0",
+    "express": "^5.1.0",
+    "mongoose": "^8.16.0",
+    "nodemailer": "^7.0.3"
+  },
+  "devDependencies": {
+    "concurrently": "^9.2.0",
+    "live-server": "^1.2.2",
+    "nodemon": "^3.1.10"
+  }
+}
