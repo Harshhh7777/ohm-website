@@ -25,7 +25,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.static(path.join(__dirname, 'public')));
 
 // ✅ MongoDB Connection
-const mongoURI = process.env.MONGODB_URI || "your-fallback-mongodb-uri-here";
+const mongoURI = process.env.MONGODB_URI || "mongodb+srv://Harsh:harshith.007@harsh0portfolio.fiqfheo.mongodb.net/portfolioComments?retryWrites=true&w=majority";
 
 mongoose.connect(mongoURI)
   .then(() => console.log("✅ Connected to MongoDB"))
