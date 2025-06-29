@@ -125,7 +125,7 @@ document.addEventListener('DOMContentLoaded', () => {
   // ========= React to Comment ===========
   window.react = async function (commentId, type) {
     try {
-      const res = await fetch(`https://ohm-backend.onrender.com/comments`, {
+    const res = await fetch(`https://ohm-backend.onrender.com/comments/${commentId}/reactions`, {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ reaction: type })
@@ -148,7 +148,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (!confirmDelete) return;
 
     try {
-      const res = await fetch(`https://ohm-backend.onrender.com/comments`, {
+      const res = await fetch(`https://ohm-backend.onrender.com/comments/${id}`, {
         method: 'DELETE'
       });
 
@@ -219,7 +219,7 @@ document.addEventListener('DOMContentLoaded', () => {
       }
 
       try {
-        const response = await fetch('https://ohm-backend.onrender.com/comments', {
+          const response = await fetch('https://ohm-backend.onrender.com/api/contact', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
