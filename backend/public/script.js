@@ -55,7 +55,8 @@ document.querySelectorAll(
 
 // ========== DOMContentLoaded ==========
 document.addEventListener('DOMContentLoaded', () => {
-  const API_URL = 'https://ohm-backend.onrender.com/api';
+  // If frontend and backend are hosted together on Render
+  const API_URL = ''; // ← uses current domain
 
   // ========= Comment Form ==========
   const commentForm = document.getElementById('commentForm');
@@ -71,7 +72,7 @@ document.addEventListener('DOMContentLoaded', () => {
       }
 
       try {
-        const res = await fetch(`${API_URL}/comments`, {
+        const res = await fetch(`/api/comments`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ name, message })
@@ -95,10 +96,12 @@ document.addEventListener('DOMContentLoaded', () => {
   // ========= Load Comments ==========
   async function loadComments() {
     try {
-      const res = await fetch(`${API_URL}/comments`);
+      const res = await fetch(`/api/comments`);
       const comments = await res.json();
 
       const commentList = document.getElementById('commentList');
+      if (!commentList) return;
+
       commentList.innerHTML = '';
 
       comments.forEach(comment => {
@@ -128,7 +131,7 @@ document.addEventListener('DOMContentLoaded', () => {
   // ========= React to Comment ==========
   window.react = async function (commentId, type) {
     try {
-      const res = await fetch(`${API_URL}/comments/${commentId}/reactions`, {
+      const res = await fetch(`/api/comments/${commentId}/reactions`, {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ reaction: type })
@@ -151,7 +154,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (!confirmDelete) return;
 
     try {
-      const res = await fetch(`${API_URL}/comments/${id}`, {
+      const res = await fetch(`/api/comments/${id}`, {
         method: 'DELETE'
       });
 
@@ -186,7 +189,7 @@ document.addEventListener('DOMContentLoaded', () => {
       }
 
       try {
-        const response = await fetch(`${API_URL}/api/contact`, {
+        const response = await fetch(`/api/contact`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(data)
@@ -194,7 +197,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         const result = await response.json();
         if (response.ok) {
-          alert(result.msg);
+          alert(result.msg || 'Form submitted successfully!');
           contactForm.reset();
         } else {
           alert('Error: ' + result.msg);
