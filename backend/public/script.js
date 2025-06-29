@@ -8,11 +8,9 @@ window.addEventListener("scroll", function () {
 document.querySelector('.menu-toggle').addEventListener('click', () => {
   const navbar = document.querySelector('.navbar');
   const menuToggle = document.querySelector('.menu-toggle');
-
   navbar.classList.toggle('active');
-  menuToggle.classList.toggle('active'); // 🔁 for icon swap
+  menuToggle.classList.toggle('active');
 });
-
 
 // Typing effect
 const roleElement = document.querySelector(".role");
@@ -49,11 +47,12 @@ document.querySelectorAll('.about-heading, .about-text p, .about-image img, .por
 });
 
 document.addEventListener('DOMContentLoaded', () => {
+  const API_URL = 'https://ohm-backend.onrender.com';
 
-  // ========= Comment Form ===========
+  // ========= Comment Form ==========
   const commentForm = document.getElementById('commentForm');
   if (commentForm) {
-    commentForm.addEventListener('submit', async function (e) {
+    commentForm.addEventListener('submit', async (e) => {
       e.preventDefault();
       const name = document.getElementById('commenterName').value.trim();
       const message = document.getElementById('commentMessage').value.trim();
@@ -64,13 +63,11 @@ document.addEventListener('DOMContentLoaded', () => {
       }
 
       try {
-        const res = await fetch('https://ohm-backend.onrender.com/api/comments', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ name, message })
-      });
-
-
+        const res = await fetch(`${API_URL}/comments`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ name, message })
+        });
 
         const data = await res.json();
         if (res.ok) {
@@ -87,10 +84,10 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  // ========= Load Comments ===========
+  // ========= Load Comments ==========
   async function loadComments() {
     try {
-      const res = await fetch('https://ohm-backend.onrender.com/comments');
+      const res = await fetch(`${API_URL}/comments`);
       const comments = await res.json();
 
       const commentList = document.getElementById('commentList');
@@ -120,12 +117,9 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   }
 
-  loadComments();
-
-  // ========= React to Comment ===========
   window.react = async function (commentId, type) {
     try {
-    const res = await fetch(`https://ohm-backend.onrender.com/comments/${commentId}/reactions`, {
+      const res = await fetch(`${API_URL}/comments/${commentId}/reactions`, {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ reaction: type })
@@ -142,20 +136,19 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   };
 
-  // ========= Delete Comment ===========
   window.deleteComment = async function (id) {
     const confirmDelete = confirm("Are you sure you want to delete this comment?");
     if (!confirmDelete) return;
 
     try {
-      const res = fetch(`https://ohm-backend.onrender.com/comments/${id}`, {
+      const res = await fetch(`${API_URL}/comments/${id}`, {
         method: 'DELETE'
       });
 
       const data = await res.json();
       if (res.ok) {
         alert('✅ Comment deleted!');
-        loadComments(); 
+        loadComments();
       } else {
         alert('❌ ' + data.message);
       }
@@ -164,53 +157,16 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   };
 
-  // ========= Animate Portfolio Cards ===========
-  const projectCards = document.querySelectorAll('.portfolio-card');
-  const projectObserver = new IntersectionObserver(entries => {
-    entries.forEach(entry => {
-      if (entry.isIntersecting) {
-        entry.target.style.opacity = '1';
-        entry.target.style.transform = 'scale(1)';
-      } else {
-        entry.target.style.opacity = '0';
-        entry.target.style.transform = 'scale(0.95)';
-      }
-    });
-  }, { threshold: 0.2 });
+  loadComments();
 
-  projectCards.forEach((card, index) => {
-    card.style.transition = `opacity 0.6s ease ${index * 0.2}s, transform 0.6s ease ${index * 0.2}s`;
-    projectObserver.observe(card);
-  });
-
-  // ========= Animate Skill Cards ===========
-  const skillCards = document.querySelectorAll('.skill');
-  const skillObserver = new IntersectionObserver(entries => {
-    entries.forEach(entry => {
-      if (entry.isIntersecting) {
-        entry.target.style.opacity = '1';
-        entry.target.style.transform = 'scale(1)';
-      }
-    });
-  }, { threshold: 0.2 });
-
-  skillCards.forEach(card => {
-    skillObserver.observe(card);
-  });
-
-  // ========= Contact Form ===========
+  // ========= Contact Form ==========
   const contactForm = document.querySelector('.contact-form');
   if (contactForm) {
     contactForm.addEventListener('submit', async (event) => {
       event.preventDefault();
-
       const formData = new FormData(contactForm);
       const data = {};
-
-      formData.forEach((value, key) => {
-        data[key] = value;
-      });
-
+      formData.forEach((value, key) => { data[key] = value; });
       data.consent = formData.get('consent') === 'on';
 
       if (!data.name || !data.email || !data.phone || !data.consent) {
@@ -219,16 +175,13 @@ document.addEventListener('DOMContentLoaded', () => {
       }
 
       try {
-          const response = await fetch('https://ohm-backend.onrender.com/api/contact', {
+        const response = await fetch(`${API_URL}/api/contact`, {
           method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify(data),
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(data)
         });
 
         const result = await response.json();
-
         if (response.ok) {
           alert(result.msg);
           contactForm.reset();
@@ -243,7 +196,6 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 });
 
-
 // Fix auto-scroll to contact on page load
 window.addEventListener("load", () => {
   if (location.hash && document.querySelector(location.hash)) {
@@ -252,12 +204,7 @@ window.addEventListener("load", () => {
   }
 });
 
-
-
-
-
-/* Dark/light mode (Toggle Mode) */
-
+// Dark/light mode toggle
 function toggleDarkMode() {
   const isDark = document.body.classList.toggle('dark-mode');
   localStorage.setItem('theme', isDark ? 'dark' : 'light');
@@ -267,6 +214,6 @@ window.addEventListener('DOMContentLoaded', () => {
   if (localStorage.getItem('theme') === 'dark') {
     document.body.classList.add('dark-mode');
   } else {
-    document.body.classList.remove('dark-mode'); // Ensures light mode on first load
+    document.body.classList.remove('dark-mode');
   }
 });
