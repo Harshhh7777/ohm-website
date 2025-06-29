@@ -55,7 +55,7 @@ document.querySelectorAll(
 
 // ========== DOMContentLoaded ==========
 document.addEventListener('DOMContentLoaded', () => {
-  const API_URL = 'https://ohm-backend.onrender.com';
+  const API_URL = 'https://ohm-backend.onrender.com/api';
 
   // ========= Comment Form ==========
   const commentForm = document.getElementById('commentForm');
